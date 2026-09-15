@@ -10,7 +10,7 @@ import {
   describeAvatarFailure,
   setUserAvatar,
 } from '../api/avatarApi';
-import { formatYear, slugify, toLabel, type Character } from '../api/starwarsApi';
+import { slugify, toLabel, type Character } from '../api/starwarsApi';
 
 interface CharacterDetailProps {
   character: Character;
@@ -82,20 +82,22 @@ export default function CharacterDetail({
   if (character.homeworld) {
     facts.push({ label: 'Homeworld', value: toLabel(character.homeworld) });
   }
-  if (character.born !== undefined) {
+  // `born`/`died` arrive display-ready from the API layer — a year turned into
+  // BBY/ABY, or the source's own free text where it had no number.
+  if (character.born) {
     facts.push({
       label: 'Born',
       value: character.bornLocation
-        ? `${formatYear(character.born)}, ${toLabel(character.bornLocation)}`
-        : formatYear(character.born),
+        ? `${character.born}, ${toLabel(character.bornLocation)}`
+        : character.born,
     });
   }
-  if (character.died !== undefined) {
+  if (character.died) {
     facts.push({
       label: 'Died',
       value: character.diedLocation
-        ? `${formatYear(character.died)}, ${toLabel(character.diedLocation)}`
-        : formatYear(character.died),
+        ? `${character.died}, ${toLabel(character.diedLocation)}`
+        : character.died,
     });
   }
   if (character.height !== undefined) {
@@ -115,12 +117,17 @@ export default function CharacterDetail({
     facts.push({ label: 'Cybernetics', value: character.cybernetics });
   }
 
+  // Always arrays by the time they reach here — the API layer coerces the
+  // source's mixed string/array shapes so this cannot call .join on a string.
   const lineages: { label: string; value: string[] }[] = [];
-  if (character.masters?.length) {
+  if (character.masters.length) {
     lineages.push({ label: 'Masters', value: character.masters });
   }
-  if (character.apprentices?.length) {
+  if (character.apprentices.length) {
     lineages.push({ label: 'Apprentices', value: character.apprentices });
+  }
+  if (character.equipment.length) {
+    lineages.push({ label: 'Equipment', value: character.equipment });
   }
 
   return (
@@ -220,7 +227,7 @@ export default function CharacterDetail({
             </Stack>
           ))}
 
-          {character.affiliations?.length && Chip ? (
+          {character.affiliations.length > 0 && Chip ? (
             <Stack spacing={0.5}>
               <Typography variant='caption' color='text.secondary'>
                 Affiliations
@@ -233,7 +240,7 @@ export default function CharacterDetail({
             </Stack>
           ) : null}
 
-          {character.formerAffiliations?.length ? (
+          {character.formerAffiliations.length > 0 ? (
             <Typography variant='caption' color='text.secondary'>
               Formerly: {character.formerAffiliations.join(', ')}
             </Typography>

@@ -1,6 +1,6 @@
 {
   "name": "@netsapiens/horizon-starwars-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Horizon federated app: browse Star Wars characters and adopt one as your avatar. A Module Federation remote loaded by the Horizon host.",
   "author": "dwang",
@@ -9,7 +9,8 @@
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
     "verify": "horizon-verify-bundle ./dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:index": "node --experimental-strip-types scripts/check-index.mjs"
   },
   "dependencies": {
     "@netsapiens/horizon-sdk": "^0.2.11",

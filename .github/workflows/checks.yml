@@ -37,3 +37,16 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      # The character index is hand-maintained community JSON whose field TYPES
+      # are not stable — `masters` is an array on some records and a bare string
+      # on others, which took the detail panel down with "value.join is not a
+      # function" before the API layer started coercing them. tsc cannot catch
+      # that: an interface is erased at build time and says nothing about what
+      # actually arrives. So this runs the real normalizer over the live
+      # document. It needs the network, and a source outage will fail the job —
+      # that is the trade for catching the next shape change here rather than in
+      # somebody's browser.
+      - name: Character index shape
+        if: '!cancelled()'
+        run: npm run check:index
