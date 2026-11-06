@@ -6,9 +6,9 @@
  * app. Same shape as horizon-pokemon-app, a different public data source, and
  * the same single write: adopting an image as the user's avatar.
  */
-import type { HorizonContext } from '@netsapiens/horizon-sdk';
+import type { FlowContext } from '@netsapiens/flow-sdk';
 import { useEffect, useMemo, useRef } from 'react';
-import { HorizonContextProvider, useRemoteApp } from '@netsapiens/horizon-sdk';
+import { FlowContextProvider, useRemoteApp } from '@netsapiens/flow-sdk';
 
 import CharactersPage from './pages/CharactersPage';
 
@@ -17,25 +17,25 @@ import CharactersPage from './pages/CharactersPage';
 // app row's `webpack_module` must match exactly. Never hardcode it twice.
 declare const __MF_NAME__: string;
 
-export default function App(horizonContext: HorizonContext) {
-  const { sdk } = useRemoteApp(horizonContext, __MF_NAME__);
+export default function App(flowContext: FlowContext) {
+  const { sdk } = useRemoteApp(flowContext, __MF_NAME__);
 
-  // The host rebuilds `horizonContext` on every colour-mode change, `ui`
+  // The host rebuilds `flowContext` on every colour-mode change, `ui`
   // included. The wrapper below is memoized with empty deps to keep a STABLE
   // component identity (re-creating it would unmount the page on every
   // render), so it must read the LATEST context through this ref rather than
   // closing over the one captured at first paint — otherwise `theme` keeps
   // updating while `ui.theme`/`ui.styles` stay on the load-time mode.
-  const contextRef = useRef(horizonContext);
-  contextRef.current = horizonContext;
+  const contextRef = useRef(flowContext);
+  contextRef.current = flowContext;
 
   const CharactersPageWithContext = useMemo(
     () =>
       function CharactersPageWithContext() {
         return (
-          <HorizonContextProvider context={contextRef.current}>
+          <FlowContextProvider context={contextRef.current}>
             <CharactersPage />
-          </HorizonContextProvider>
+          </FlowContextProvider>
         );
       },
     [],

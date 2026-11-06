@@ -1,7 +1,7 @@
 # Horizon Star Wars App
 
 A Horizon federated app (Webpack Module Federation remote, built with
-[`@netsapiens/horizon-sdk`](https://www.npmjs.com/package/@netsapiens/horizon-sdk))
+[`@netsapiens/flow-sdk`](https://www.npmjs.com/package/@netsapiens/flow-sdk))
 that adds a **Star Wars** page to the Horizon portal's **Apps** menu, alongside
 **Example CRM** and the [Pokemon app](https://github.com/netsapiens/horizon-pokemon-app).
 
@@ -19,7 +19,7 @@ adopting an image as the signed-in user's avatar.
   biography.
 - **Set as my avatar** crops the portrait to a square and uploads it as the
   signed-in user's avatar, through the host's audited API proxy.
-- Every visible element comes from `horizonContext.ui`, so the page re-themes
+- Every visible element comes from `flowContext.ui`, so the page re-themes
   live with the portal's dark/light toggle.
 
 ## Architecture
@@ -31,7 +31,7 @@ Browser (https://<portal>/apps/starwars)
        └─ one fetch of the character index (static JSON, ~57 KB)
             https://raw.githubusercontent.com/akabab/starwars-api/…/all.json
        └─ portraits displayed straight from Fandom's image CDN
-       └─ POST …/avatar through horizonContext.api   (the only write)
+       └─ POST …/avatar through flowContext.api   (the only write)
 ```
 
 The index is one document holding complete records, so there is no
@@ -59,7 +59,7 @@ else's CDN. That is the origin of the one caveat below.
 ## Setting an avatar
 
 **Set as my avatar** uploads to `POST /domains/{domain}/users/{extension}/avatar`
-through `horizonContext.api`, so the app never sees the user's token and the
+through `flowContext.api`, so the app never sees the user's token and the
 call is attributed to it on the Registered Apps page. `src/api/avatarApi.ts`
 has the contract. Four things govern whether it works:
 
@@ -77,7 +77,7 @@ has the contract. Four things govern whether it works:
 - **The platform's API-write master capability must be enabled** for SDK apps
   (Platform -> UI SDK Management). With it off, the host's proxy answers 403
   before the request leaves the browser, and the panel says so.
-- **The session needs an extension.** `HorizonUser.extension` is optional; a
+- **The session needs an extension.** `FlowUser.extension` is optional; a
   platform admin who is not a subscriber has no avatar to set, and the button
   is disabled with a note rather than failing at the API.
 

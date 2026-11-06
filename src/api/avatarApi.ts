@@ -2,7 +2,7 @@
  * Adopting a character's portrait as the signed-in user's avatar.
  *
  * This is the app's only WRITE against the platform. It goes through
- * `horizonContext.api` — the host-brokered, audited proxy — so the app never
+ * `flowContext.api` — the host-brokered, audited proxy — so the app never
  * sees the user's token and the call is attributed to it on the Registered
  * Apps page. The upload is `multipart/form-data` with the field named `file`,
  * because the avatar endpoint reads a PHP file upload; the host's api client
@@ -26,7 +26,7 @@
  *     cross-origin picture happily; only reading its pixels is restricted. So
  *     the page works even where the avatar button cannot.
  */
-import type { HorizonApiClient, HorizonUser } from '@netsapiens/horizon-sdk';
+import type { FlowApiClient, FlowUser } from '@netsapiens/flow-sdk';
 
 export interface AvatarTarget {
   domain: string;
@@ -46,12 +46,12 @@ const QUALITY = 0.92;
 
 /**
  * The avatar path needs a domain AND an extension, and `extension` is optional
- * on `HorizonUser` — a session without one (a platform admin who is not a
+ * on `FlowUser` — a session without one (a platform admin who is not a
  * subscriber) has no avatar to set. Resolving it in one place lets the page
  * disable the control rather than discovering this in a 404.
  */
 export function avatarTargetFor(
-  user: HorizonUser | undefined,
+  user: FlowUser | undefined,
 ): AvatarTarget | null {
   if (!user?.domain || !user?.extension) {
     return null;
@@ -114,7 +114,7 @@ export async function squareCropOf(
 
 /** Crop the image to a square and upload it as this user's avatar. */
 export async function setUserAvatar(
-  api: HorizonApiClient,
+  api: FlowApiClient,
   target: AvatarTarget,
   imageUrl: string,
   filename: string,

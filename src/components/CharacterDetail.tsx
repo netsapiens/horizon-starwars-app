@@ -3,7 +3,7 @@
  * one action this app offers, adopting the portrait as the user's avatar.
  */
 import { useState } from 'react';
-import { useHorizonContext } from '@netsapiens/horizon-sdk';
+import { useFlowContext } from '@netsapiens/flow-sdk';
 
 import {
   avatarTargetFor,
@@ -34,7 +34,7 @@ export default function CharacterDetail({
   character,
   onClose,
 }: CharacterDetailProps) {
-  const { api, ui, user } = useHorizonContext();
+  const { api, ui, user } = useFlowContext();
   const { Paper, Stack, Typography, Chip, Box, Button, Divider, Alert } =
     ui ?? {};
 

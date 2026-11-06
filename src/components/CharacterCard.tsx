@@ -6,7 +6,7 @@
  * the avatar upload does, needs anything more (see api/avatarApi.ts).
  */
 import { useState } from 'react';
-import { useHorizonContext } from '@netsapiens/horizon-sdk';
+import { useFlowContext } from '@netsapiens/flow-sdk';
 
 import { toLabel, type Character } from '../api/starwarsApi';
 
@@ -21,7 +21,7 @@ export default function CharacterCard({
   selected,
   onSelect,
 }: CharacterCardProps) {
-  const { ui } = useHorizonContext();
+  const { ui } = useFlowContext();
   const { Card, CardContent, Stack, Typography, Box, Icon } = ui ?? {};
 
   // Records whose id's portrait failed, not what to show — so a card reused

@@ -7,7 +7,7 @@
  * detail-loading state to get wrong.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { useHorizonContext } from '@netsapiens/horizon-sdk';
+import { useFlowContext } from '@netsapiens/flow-sdk';
 
 import { fetchCharacters, type Character } from '../api/starwarsApi';
 import CharacterCard from '../components/CharacterCard';
@@ -25,7 +25,7 @@ function isAbort(error: unknown): boolean {
 }
 
 export default function CharactersPage() {
-  const { ui } = useHorizonContext();
+  const { ui } = useFlowContext();
   const { PageTemplate } = ui?.templates ?? {};
   const { Paper, Stack, Typography, Box, SearchField, Button, Alert } = ui ?? {};
 
